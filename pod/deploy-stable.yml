@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-stable
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      apps: nginx
+      version: stable
+  template:
+    metadata:
+      labels:
+        apps: nginx
+        version: stable
+    spec:
+      containers:
+      - name: ct-nginx
+        image: nginx:1.24-bullseye
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: dockerhub

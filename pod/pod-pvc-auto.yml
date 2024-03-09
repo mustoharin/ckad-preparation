@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: pod-pvc-auto
+  name: pod-pvc-auto
+spec:
+  volumes:
+    - name: volume-nfs
+      persistentVolumeClaim:
+        claimName: pvc-auto
+  containers:
+  - image: nginx
+    name: ct-nginx
+    volumeMounts:
+    - name: volume-nfs
+      mountPath: /usr/share/nginx/html
+  imagePullSecrets:
+    - name: regcred
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-auto
+spec:
+  storageClassName: nfs-low
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteMany

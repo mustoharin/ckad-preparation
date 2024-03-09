@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon-nginx
+spec:
+  selector:
+    matchLabels:
+      apps: daemon-nginx
+  template:
+    metadata:
+      labels:
+        apps: daemon-nginx
+    spec:
+      containers:
+      - name: ct-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: dockerhub

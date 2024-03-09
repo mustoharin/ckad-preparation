@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-db
+  labels:
+    app: db
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+  selector:
+    app: db
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-db-a
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: db
+  hostPath:
+    path: /data/db-a
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-db-b
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: db
+  hostPath:
+    path: /data/db-b
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  selector:
+    matchLabels:
+      app: db
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: ct-db
+        image: mariadb
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: database
+          mountPath: /var/lib/mysql/
+        envFrom:
+        - configMapRef:
+            name: config-db
+  volumeClaimTemplates:
+  - metadata:
+      name: database
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: db
+      resources:
+        requests:
+          storage: 1Gi

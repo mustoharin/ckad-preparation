@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-cronjob
+spec:
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          imagePullSecrets:
+            - name: regcred
+          restartPolicy: OnFailure
+      ttlSecondsAfterFinished: 60
+      backoffLimit: 2

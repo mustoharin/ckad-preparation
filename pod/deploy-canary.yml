@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      apps: nginx
+      version: canary
+  template:
+    metadata:
+      labels:
+        apps: nginx
+        version: canary
+    spec:
+      containers:
+      - name: ct-nginx
+        image: nginx:1.25.3-bookworm
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: dockerhub

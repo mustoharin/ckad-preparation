@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-low
+provisioner: cluster.local/nfs-subdir-external-provisioner
+parameters:
+  server: 172.23.9.208
+  path: /mnt/peserta3
+  readOnly: "false"
+

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica-nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      apps-type: nginx-replicaset
+  template:
+    metadata:
+      labels:
+        apps-type: nginx-replicaset
+    spec:
+      containers:
+      - name: ct-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: dockerhub
