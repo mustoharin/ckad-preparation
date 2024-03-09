@@ -1,26 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deploy-nginx
+  name: deployment-blue
 spec:
-  strategy:
-   type: RollingUpdate
-   rollingUpdate:
-     maxSurge: 1
-     maxUnavailable: 0
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      apps-type: nginx-deployment
+      apps: nginx
+      version: blue
   template:
     metadata:
       labels:
-        apps-type: nginx-deployment
+        apps: nginx
+        version: blue
     spec:
       containers:
       - name: ct-nginx
         image: nginx:1.24-bullseye
         ports:
         - containerPort: 80
-      imagePullSecrets:
-        - name: dockerhub
