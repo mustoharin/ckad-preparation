@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    apps: database
+  name: pod-config-db
+  namespace: test
+  annotations:
+    deskripsi: ini belajar membuat pod database
+spec:
+  containers:
+  - image: mariadb
+    name: ct-db
+    envFrom:
+    - configMapRef:
+        name: config-db
+    imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+  - name: dockerhub  

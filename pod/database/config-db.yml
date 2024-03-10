@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-db
+  namespace: test
+data:
+  MARIADB_ROOT_PASSWORD: admin123
+  MARIADB_DATABASE: training
+  MARIADB_USER: userku
+  MARIADB_PASSWORD: userku123
