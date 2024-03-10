@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-hpa
+  namespace: test
+spec:
+  selector:
+    matchLabels:
+      apps: testing-hpa
+  template:
+    metadata:
+      labels:
+        apps: testing-hpa
+    spec:
+      containers:
+      - name: ct-php-apache
+        image: rydrafi13/hpa-example
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: dockerhub
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: svc-hpa
+ namespace: test
+spec:
+ ports:
+ - port: 80
+ selector:
+  apps: testing-hpa
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-testing
+  namespace: test
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: deployment-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50

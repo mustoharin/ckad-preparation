@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-db
+  namespace: test
+  labels:
+    apps: database
+  annotations:
+    deskripsi: ini belajar membuat pod database
+spec:
+  containers:
+  - name: ct-database
+    image: mariadb
+    ports:
+      - containerPort: 3306
+    env:
+      - name: MARIADB_ROOT_PASSWORD
+        value: admin123
+    imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+  - name: dockerhub
